@@ -35,7 +35,7 @@
 
         public void AddForce()
         {
-            _body.AddForce(Vector3.right * _rotationMultipier, ForceMode.Impulse);
+            _body?.AddForce(Vector3.right * _rotationMultipier, ForceMode.Impulse);
         }
 
         private IEnumerator ChangedStateAction(float changedStateTime)

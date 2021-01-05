@@ -1,10 +1,12 @@
 namespace Base.Game.GameObject.Interactional
 {
+    using Base.Game.Command;
     using Base.Game.GameObject.Interactable;
+    using Base.Game.State;
     using UnityEngine;
 
     [RequireComponent(typeof(Collider), typeof(Rigidbody))]
-    public abstract class BaseCar : MonoBehaviour, IInteractionalObject
+    public abstract class BaseCar : MonoBehaviour, IInteractionalObject, IMoveableObject, IRotateableObject
     {
         [SerializeField] private float _defaultSpeed = 1f;
         [SerializeField] private float _defaultRotateSpeed = 1f;
@@ -16,6 +18,8 @@ namespace Base.Game.GameObject.Interactional
 
         protected Rigidbody _body;
 
+        protected IBaseCarContext Context { get; set; }
+
         private void Awake()
         {
             Initialize();
@@ -26,22 +30,19 @@ namespace Base.Game.GameObject.Interactional
             _body = GetComponent<Rigidbody>();
             _speed = _defaultSpeed * Time.fixedDeltaTime;
             _rotateSpeed = _defaultRotateSpeed * Time.deltaTime;
+            Context = new BaseCarContext(this);
+            Context.State = new StateMoveForwardRotateAxisY((BaseCarContext)Context);
         }
 
         protected virtual void Movement()
         {
-            _body.velocity = transform.forward * _speed;
+            Context.Move?.Execute();
         }
 
         protected virtual void Rotate()
         {
-            transform.Rotate(transform.up, _rotateSpeed);
+            Context.Rotate?.Execute();
             _connectedBall.AddForce();
-        }
-
-        protected virtual void FixedUpdate()
-        {
-            Movement();
         }
 
         protected virtual void OnTriggerEnter(Collider other)
@@ -61,7 +62,7 @@ namespace Base.Game.GameObject.Interactional
             if(obj is IBall ball)
             {
                 _body.AddForce(Vector3.right * ball.GetImpactForce(), ForceMode.Impulse);
-                _body.AddForce(Vector3.up * ball.GetImpactForce(), ForceMode.Impulse);
+                _body.AddForce(Vector3.up * ball.GetImpactForce()/2, ForceMode.Impulse);
             }
             if (obj is MagicBox box)
                 _connectedBall.ChangeState(box.Timer);
@@ -70,6 +71,26 @@ namespace Base.Game.GameObject.Interactional
         public Transform GetTransform()
         {
             return transform;
+        }
+
+        public Rigidbody GetRigidbody()
+        {
+            return _body;
+        }
+
+        public float GetSpeed()
+        {
+            return _speed;
+        }
+
+        public float GetRotateSpeed()
+        {
+            return _rotateSpeed;
+        }
+
+        public Vector3 GetCenterPoint()
+        {
+            return transform.position;
         }
 
         #endregion

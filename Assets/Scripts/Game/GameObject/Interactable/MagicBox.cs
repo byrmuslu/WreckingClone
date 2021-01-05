@@ -1,6 +1,7 @@
 ﻿namespace Base.Game.GameObject.Interactable
 {
     using Base.Game.GameObject.Interactional;
+    using Base.Game.Signal;
     using UnityEngine;
     public class MagicBox : MonoBehaviour, IInteractableObject
     {
@@ -13,6 +14,7 @@
 
         public void Active()
         {
+            SignalBus<SignalSpawnMagicBox, MagicBox>.Instance.Fire(this);
             gameObject.SetActive(true);
         }
 

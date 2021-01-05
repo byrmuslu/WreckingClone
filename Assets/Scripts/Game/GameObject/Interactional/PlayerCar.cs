@@ -5,6 +5,11 @@
     public class PlayerCar : BaseCar
     {
 
+        private void FixedUpdate()
+        {
+            Context.Move?.Execute();            
+        }
+
         private void OnEnable()
         {
             Registration();
