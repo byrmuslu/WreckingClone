@@ -13,12 +13,14 @@ namespace Base.Game.GameObject.Interactional
         [Space(20)]
         [SerializeField] protected Ball _connectedBall;
 
-        protected float _speed;
-        protected float _rotateSpeed;
+        public float RotateSpeed { get; protected set; }
+        public Vector3 CenterPoint { get => transform.position; }
+        public Transform Transform { get => transform; }
 
-        protected Rigidbody _body;
-
+        public Rigidbody Rigidbody { get; protected set; }
+        public float Speed { get; protected set; }
         protected IBaseCarContext Context { get; set; }
+
 
         private void Awake()
         {
@@ -27,9 +29,9 @@ namespace Base.Game.GameObject.Interactional
 
         protected virtual void Initialize()
         {
-            _body = GetComponent<Rigidbody>();
-            _speed = _defaultSpeed * Time.fixedDeltaTime;
-            _rotateSpeed = _defaultRotateSpeed * Time.deltaTime;
+            Rigidbody = GetComponent<Rigidbody>();
+            Speed = _defaultSpeed * Time.fixedDeltaTime;
+            RotateSpeed = _defaultRotateSpeed * Time.deltaTime;
             Context = new BaseCarContext(this);
             Context.State = new StateMoveForwardRotateAxisY((BaseCarContext)Context);
         }
@@ -55,44 +57,26 @@ namespace Base.Game.GameObject.Interactional
             collision.collider.GetComponent<IInteractableObject>()?.Interact(this);
         }
 
-        #region Implementations
-
         public virtual void Interact(IInteractableObject obj)
         {
             if(obj is IBall ball)
             {
-                _body.AddForce(Vector3.right * ball.GetImpactForce(), ForceMode.Impulse);
-                _body.AddForce(Vector3.up * ball.GetImpactForce()/2, ForceMode.Impulse);
+                Rigidbody.AddForce(Vector3.right * ball.GetImpactForce(), ForceMode.Impulse);
+                Rigidbody.AddForce(Vector3.up * ball.GetImpactForce()/2, ForceMode.Impulse);
             }
             if (obj is MagicBox box)
                 _connectedBall.ChangeState(box.Timer);
         }
 
-        public Transform GetTransform()
+        public virtual void Active()
         {
-            return transform;
+            gameObject.SetActive(true);
         }
 
-        public Rigidbody GetRigidbody()
+        public virtual void DeActive()
         {
-            return _body;
+            gameObject.SetActive(false);
         }
 
-        public float GetSpeed()
-        {
-            return _speed;
-        }
-
-        public float GetRotateSpeed()
-        {
-            return _rotateSpeed;
-        }
-
-        public Vector3 GetCenterPoint()
-        {
-            return transform.position;
-        }
-
-        #endregion
     }
 }

@@ -7,7 +7,8 @@
     {
         [SerializeField] private float _timer = 3f;
         public float Timer { get => _timer; }
-        private void DeActive()
+        public Transform Transform { get => transform; }
+        public void DeActive()
         {
             gameObject.SetActive(false);
         }
@@ -20,10 +21,6 @@
 
         #region Implementations
 
-        public Transform GetTransform()
-        {
-            return transform;
-        }
 
         public void Interact(IInteractionalObject obj)
         {
@@ -32,6 +29,7 @@
             obj.Interact(this);
             DeActive();
         }
+
 
         #endregion
 

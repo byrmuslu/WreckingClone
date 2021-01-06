@@ -2,8 +2,8 @@
 {
     public interface IRotateableObject
     {
-        UnityEngine.Transform GetTransform();
-        float GetRotateSpeed();
-        UnityEngine.Vector3 GetCenterPoint();
+        UnityEngine.Transform Transform { get; }
+        float RotateSpeed { get; }
+        UnityEngine.Vector3 CenterPoint { get; }
     }
 }

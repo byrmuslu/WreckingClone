@@ -6,12 +6,12 @@
 
         public MovementAction(IMoveableObject obj) => _obj = obj;
 
-        public void MoveForward() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.forward * _obj.GetSpeed();
-        public void MoveBack() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.forward * -1 * _obj.GetSpeed();
-        public void MoveRight() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.right * _obj.GetSpeed();
-        public void MoveLeft() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.right * -1 * _obj.GetSpeed();
-        public void MoveUp() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.up * _obj.GetSpeed();
-        public void MoveDown() => _obj.GetRigidbody().velocity = _obj.GetRigidbody().transform.up * -1 * _obj.GetSpeed();
+        public void MoveForward() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.forward * _obj.Speed;
+        public void MoveBack() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.forward * -1 * _obj.Speed;
+        public void MoveRight() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.right * _obj.Speed;
+        public void MoveLeft() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.right * -1 * _obj.Speed;
+        public void MoveUp() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.up * _obj.Speed;
+        public void MoveDown() => _obj.Rigidbody.velocity = _obj.Rigidbody.transform.up * -1 * _obj.Speed;
 
     }
 }

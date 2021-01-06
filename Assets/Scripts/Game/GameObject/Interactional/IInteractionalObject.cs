@@ -4,6 +4,8 @@
     public interface IInteractionalObject
     {
         void Interact(IInteractableObject obj);
-        UnityEngine.Transform GetTransform();
+        UnityEngine.Transform Transform { get; }
+        void Active();
+        void DeActive();
     }
 }

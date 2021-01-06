@@ -2,7 +2,7 @@
 {
     public interface IMoveableObject
     {
-        UnityEngine.Rigidbody GetRigidbody();
-        float GetSpeed();
+        UnityEngine.Rigidbody Rigidbody { get; }
+        float Speed { get; }
     }
 }
