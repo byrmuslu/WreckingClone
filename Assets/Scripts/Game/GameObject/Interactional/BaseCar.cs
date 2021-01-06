@@ -21,7 +21,7 @@ namespace Base.Game.GameObject.Interactional
         public float Speed { get; protected set; }
         protected IBaseCarContext Context { get; set; }
 
-
+        private bool _isGround = false;
         private void Awake()
         {
             Initialize();
@@ -38,11 +38,15 @@ namespace Base.Game.GameObject.Interactional
 
         protected virtual void Movement()
         {
+            if (!_isGround)
+                return;
             Context.Move?.Execute();
         }
 
         protected virtual void Rotate()
         {
+            if (!_isGround)
+                return;
             Context.Rotate?.Execute();
             _connectedBall.AddForce();
         }
@@ -55,6 +59,16 @@ namespace Base.Game.GameObject.Interactional
         protected virtual void OnCollisionEnter(Collision collision)
         {
             collision.collider.GetComponent<IInteractableObject>()?.Interact(this);
+        }
+
+        private void OnCollisionStay(Collision collision)
+        {
+            _isGround = true;
+        }
+
+        private void OnCollisionExit(Collision collision)
+        {
+            _isGround = false;
         }
 
         public virtual void Interact(IInteractableObject obj)

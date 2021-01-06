@@ -45,10 +45,9 @@
                 rotateTime -= Time.fixedDeltaTime;
                 if (rotateTime > 0)
                 {
-                    Context.Rotate?.Execute();
-                    _connectedBall.AddForce();
+                    Rotate();
                 }
-                Context.Move?.Execute();
+                Movement();
                 yield return wait;
             }
         }
