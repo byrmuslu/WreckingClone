@@ -61,8 +61,8 @@ namespace Base.Game.GameObject.Interactional
         {
             if(obj is IBall ball)
             {
-                Rigidbody.AddForce(Vector3.right * ball.GetImpactForce(), ForceMode.Impulse);
-                Rigidbody.AddForce(Vector3.up * ball.GetImpactForce()/2, ForceMode.Impulse);
+                Rigidbody.AddForce(Vector3.right * ball.ImpactForce, ForceMode.Impulse);
+                Rigidbody.AddForce(Vector3.up * ball.ImpactForce / 2, ForceMode.Impulse);
             }
             if (obj is MagicBox box)
                 _connectedBall.ChangeState(box.Timer);

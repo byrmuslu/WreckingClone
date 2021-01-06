@@ -2,7 +2,7 @@
 {
     public interface IBall
     {
-        float GetImpactForce();
+        float ImpactForce { get; }
         void AddForce();
         void ChangeState(float timer);
     }

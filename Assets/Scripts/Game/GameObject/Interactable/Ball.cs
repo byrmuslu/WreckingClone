@@ -20,7 +20,7 @@
         private List<Linkage> _linkages;
         private BaseCar _ownCar = null;
         private HingeJoint _joint;
-
+        public float ImpactForce { get => _impactForce; }
         public Transform Transform { get; }
 
         private void Awake()
@@ -74,11 +74,6 @@
             if (obj.Equals(_ownCar))
                 return;
             obj.Interact(this);
-        }
-
-        public float GetImpactForce()
-        {
-            return _impactForce;
         }
 
         public void ChangeState(float timer)
