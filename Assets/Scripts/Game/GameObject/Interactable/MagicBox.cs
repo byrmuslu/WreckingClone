@@ -1,13 +1,21 @@
 ﻿namespace Base.Game.GameObject.Interactable
 {
+    using Base.Game.GameObject.Environment;
     using Base.Game.GameObject.Interactional;
     using Base.Game.Signal;
     using UnityEngine;
-    public class MagicBox : MonoBehaviour, IInteractableObject
+
+    [RequireComponent(typeof(Collider), typeof(Rigidbody))]
+    public class MagicBox : MonoBehaviour, IInteractableObject, IPortableObject
     {
         [SerializeField] private float _timer = 3f;
         public float Timer { get => _timer; }
         public Transform Transform { get => transform; }
+
+        private bool _onGround = true;
+
+        private ICarrier _connectedCarrier;
+
         public void DeActive()
         {
             gameObject.SetActive(false);
@@ -19,19 +27,30 @@
             gameObject.SetActive(true);
         }
 
-        #region Implementations
-
-
         public void Interact(IInteractionalObject obj)
         {
-            if (!(obj is BaseCar))
+            if (!(obj is BaseCar) || !_onGround)
                 return;
             obj.Interact(this);
             DeActive();
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponent<Carrier>())
+                return;
+            _onGround = true;
+            _connectedCarrier?.DeActive();
+            transform.parent = null;
+            _connectedCarrier = null;
+        }
 
-        #endregion
-
+        public void Connect(ICarrier carrier)
+        {
+            _onGround = false;
+            _connectedCarrier = carrier;
+            transform.position = carrier.MovedObjectPosition;
+            transform.parent = carrier.Transform;
+        }
     }
 }

@@ -2,81 +2,44 @@ namespace Base.Game.GameObject.Interactional
 {
     using Base.Game.Command;
     using Base.Game.GameObject.Interactable;
-    using Base.Game.State;
     using UnityEngine;
 
-    [RequireComponent(typeof(Collider), typeof(Rigidbody))]
-    public abstract class BaseCar : MonoBehaviour, IInteractionalObject, IMoveableObject, IRotateableObject
+    public partial class BaseCar : IInteractionalObject, IMoveableObject, IRotateableObject
     {
-        [SerializeField] private float _defaultSpeed = 1f;
-        [SerializeField] private float _defaultRotateSpeed = 1f;
-        [Space(20)]
-        [SerializeField] protected Ball _connectedBall;
-
         public float RotateSpeed { get; protected set; }
         public Vector3 CenterPoint { get => transform.position; }
         public Transform Transform { get => transform; }
 
         public Rigidbody Rigidbody { get; protected set; }
         public float Speed { get; protected set; }
-        protected IBaseCarContext Context { get; set; }
 
-        private bool _isGround = false;
-        private void Awake()
-        {
-            Initialize();
-        }
+        private ICommand _move;
+        private ICommand _rotate;
 
         protected virtual void Initialize()
         {
-            Rigidbody = GetComponent<Rigidbody>();
-            Speed = _defaultSpeed * Time.fixedDeltaTime;
-            RotateSpeed = _defaultRotateSpeed * Time.deltaTime;
-            Context = new BaseCarContext(this);
-            Context.State = new StateMoveForwardRotateAxisY((BaseCarContext)Context);
+            var moveAction = new MovementAction(this);
+            _move = new Command<MovementAction>(moveAction, m => m.MoveForward());
+            var rotateAction = new RotateAction(this);
+            _rotate = new Command<RotateAction>(rotateAction, r => r.RotateAxisY());
         }
 
         protected virtual void Movement()
         {
-            if (!_isGround)
-                return;
-            Context.Move?.Execute();
+            _move.Execute();
         }
 
         protected virtual void Rotate()
         {
-            if (!_isGround)
-                return;
-            Context.Rotate?.Execute();
+            _rotate.Execute();
             _connectedBall.AddForce();
-        }
-
-        protected virtual void OnTriggerEnter(Collider other)
-        {
-            other.GetComponent<IInteractableObject>()?.Interact(this);
-        }
-
-        protected virtual void OnCollisionEnter(Collision collision)
-        {
-            collision.collider.GetComponent<IInteractableObject>()?.Interact(this);
-        }
-
-        private void OnCollisionStay(Collision collision)
-        {
-            _isGround = true;
-        }
-
-        private void OnCollisionExit(Collision collision)
-        {
-            _isGround = false;
         }
 
         public virtual void Interact(IInteractableObject obj)
         {
             if(obj is IBall ball)
             {
-                Rigidbody.AddForce(Vector3.right * ball.ImpactForce, ForceMode.Impulse);
-                Rigidbody.AddForce(Vector3.up * ball.ImpactForce / 2, ForceMode.Impulse);
+                Rigidbody.AddExplosionForce(ball.ImpactForce, ball.Transform.position, 5f,3.0f);
             }
             if (obj is MagicBox box)
                 _connectedBall.ChangeState(box.Timer);

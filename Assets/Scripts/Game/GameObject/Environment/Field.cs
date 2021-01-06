@@ -28,7 +28,8 @@ namespace Base.Game.Environment
             float timer = 0f;
             float colorChangeTimer = .5f;
             bool isDefault = true;
-            while(timer < _explosionTime)
+            transform.position -= Vector3.up * Time.fixedDeltaTime;
+            while (timer < _explosionTime)
             {
                 timer += Time.fixedDeltaTime;
                 colorChangeTimer -= Time.fixedDeltaTime;

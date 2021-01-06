@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Constant : MonoBehaviour
+namespace Base.Util
 {
-    // Start is called before the first frame update
-    void Start()
+    public static class Constant
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public static float platformRadius = 100f;
     }
 }

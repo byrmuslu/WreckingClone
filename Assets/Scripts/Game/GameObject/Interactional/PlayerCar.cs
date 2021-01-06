@@ -7,7 +7,7 @@
 
         private void FixedUpdate()
         {
-            Context.Move?.Execute();            
+            Movement();        
         }
 
         private void OnEnable()
@@ -30,9 +30,9 @@
             SignalBus<SignalTouch, bool>.Instance.UnRegister(OnTouched);
         }
 
-        private void OnTouched(bool obj)
+        private void OnTouched(bool touched)
         {
-            if (!obj)
+            if (!touched)
                 return;
             Rotate();
         }
