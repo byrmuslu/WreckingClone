@@ -19,6 +19,8 @@
         public void DeActive()
         {
             gameObject.SetActive(false);
+            SignalBus<SignalMagicBoxDestroyed, MagicBox>.Instance.Fire(this);
+            SignalBus<SignalInteractableObjectDestroyed, IInteractableObject>.Instance.Fire(this);
         }
 
         public void Active()

@@ -1,10 +1,13 @@
 namespace Base.Game.GameObject.Environment
 {
+    using Base.Game.GameObject.Interactable;
+    using Base.Game.GameObject.Interactional;
+    using Base.Game.Signal;
     using Base.Util;
     using UnityEngine;
 
     [RequireComponent(typeof(Rigidbody), typeof(Collider))]
-    public class Carrier : MonoBehaviour, ICarrier
+    public class Carrier : MonoBehaviour, ICarrier, IInteractableObject
     {
         [SerializeField] private Transform _movedObjectTransform = null;
         [Space(20)]
@@ -27,6 +30,12 @@ namespace Base.Game.GameObject.Environment
         public void DeActive()
         {
             gameObject.SetActive(false);
+            SignalBus<SignalCarrierDestroyed, Carrier>.Instance.Fire(this);
+            SignalBus<SignalInteractableObjectDestroyed, IInteractableObject>.Instance.Fire(this);
+        }
+
+        public void Interact(IInteractionalObject obj)
+        {
         }
     }
 }

@@ -7,13 +7,11 @@
     {
         private void OnTriggerEnter(Collider other)
         {
-            other.GetComponent<IInteractableObject>()?.DeActive();
             other.GetComponent<IInteractionalObject>()?.DeActive();
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            collision.collider.GetComponent<IInteractableObject>()?.DeActive();
             collision.collider.GetComponent<IInteractionalObject>()?.DeActive();
         }
     }

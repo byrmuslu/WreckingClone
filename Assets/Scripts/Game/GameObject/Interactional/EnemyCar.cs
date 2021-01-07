@@ -17,14 +17,21 @@
             _spawnedBoxes = new Queue<MagicBox>();
         }
 
+        public override void DeActive()
+        {
+            base.DeActive();
+            SignalBus<SignalEnemyCarDestroyed, EnemyCar>.Instance.Fire(this);
+        }
+
         private void OnDisable()
         {
             StopAllCoroutines();
             UnRegistration();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             StartCoroutine(AIAction());
             Registration();
         }

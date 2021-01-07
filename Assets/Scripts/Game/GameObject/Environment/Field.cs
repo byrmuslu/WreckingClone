@@ -10,8 +10,11 @@ namespace Base.Game.Environment
         private Color _defaultColor;
         private Material _material;
 
+        private Vector3 _startingPos;
+
         private void Awake()
         {
+            _startingPos = transform.position;
             _material = GetComponent<MeshRenderer>().material;
             _defaultColor = _material.color;
         }
@@ -20,6 +23,14 @@ namespace Base.Game.Environment
         {
             StopAllCoroutines();
             StartCoroutine(DeActiveAction());
+        }
+
+        public void Active()
+        {
+            StopAllCoroutines();
+            _material.color = _defaultColor;
+            transform.position = _startingPos;
+            gameObject.SetActive(true);
         }
 
         private IEnumerator DeActiveAction()

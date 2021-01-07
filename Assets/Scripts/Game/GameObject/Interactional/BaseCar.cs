@@ -2,6 +2,7 @@ namespace Base.Game.GameObject.Interactional
 {
     using Base.Game.Command;
     using Base.Game.GameObject.Interactable;
+    using Base.Game.Signal;
     using UnityEngine;
 
     public partial class BaseCar : IInteractionalObject, IMoveableObject, IRotateableObject
@@ -47,12 +48,16 @@ namespace Base.Game.GameObject.Interactional
 
         public virtual void Active()
         {
+            _connectedBall.Active();
+            _connectedBall.Init();
+            
             gameObject.SetActive(true);
         }
 
         public virtual void DeActive()
         {
             gameObject.SetActive(false);
+            SignalBus<SignalInteractionalObjectDestroyed, IInteractionalObject>.Instance.Fire(this);
         }
 
     }
