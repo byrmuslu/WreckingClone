@@ -23,6 +23,7 @@
             Initialize();
         }
 
+
         protected virtual void OnEnable()
         {
             float value = Constant.platformRadius / 2;

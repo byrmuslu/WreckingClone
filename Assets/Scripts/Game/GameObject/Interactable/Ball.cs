@@ -3,7 +3,7 @@
     using Base.Game.GameObject.Interactional;
     using UnityEngine;
 
-    [RequireComponent(typeof(Collider), typeof(Rigidbody), typeof(HingeJoint))]
+    [RequireComponent(typeof(Collider), typeof(Rigidbody))]
     public partial class Ball : IInteractableObject, IBall
     {
         public float ImpactForce { get => _impactForce; }

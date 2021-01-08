@@ -190,6 +190,7 @@ namespace Base.Game.Manager
                 {
                     Constant.platformRadius -= 25;
                     MagicBoxSpawn();
+                    MagicBoxSpawn();
                     timer = _fieldExplosionTime;
                     Field explosiveZone = _explosiveZones[0];
                     explosiveZone.DeActive();

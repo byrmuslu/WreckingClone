@@ -21,13 +21,29 @@
         private Rigidbody _body;
         private List<Linkage> _linkages;
         private BaseCar _ownCar = null;
-        private HingeJoint _joint;
+        private FixedJoint _joint;
 
         private float _stateTime;
         private Coroutine _actionRoutine;
         private Vector3 _initLocalPos;
         private Rigidbody _connectedBody;
         
+
+        private void Awake()
+        {
+            _impactForce = _defaultImpactForce;
+            _initLocalPos = transform.localPosition;
+            _collider = GetComponent<Collider>();
+            _joint = GetComponent<FixedJoint>();
+            _connectedBody = _joint.connectedBody;
+            _ownCar = GetComponentInParent<BaseCar>();
+            _linkages = transform.parent.GetComponentsInChildren<Linkage>().ToList();
+            _body = GetComponent<Rigidbody>();
+            _rotationMultipier = _defaultRotationMultipier;
+            _changedStateRotationSpeed *= Time.fixedDeltaTime;
+        }
+
+
         public void Init()
         {
             _impactForce = _defaultImpactForce;
@@ -39,20 +55,6 @@
             _actionRoutine = null;
             foreach (Linkage linkage in _linkages)
                 linkage.Init();
-        }
-
-        private void Awake()
-        {
-            _impactForce = _defaultImpactForce;
-            _initLocalPos = transform.localPosition;
-            _collider = GetComponent<Collider>();
-            _joint = GetComponent<HingeJoint>();
-            _connectedBody = _joint.connectedBody;
-            _ownCar = GetComponentInParent<BaseCar>();
-            _linkages = transform.parent.GetComponentsInChildren<Linkage>().ToList();
-            _body = GetComponent<Rigidbody>();
-            _rotationMultipier = _defaultRotationMultipier;
-            _changedStateRotationSpeed *= Time.fixedDeltaTime;
         }
 
         public void SetMesh(Mesh mesh)
