@@ -63,6 +63,7 @@ namespace Base.Game.Manager
 
         private void OnInteractionalObjectDestroyed(IInteractionalObject obj)
         {
+            _interactionalObjectInGame.Remove(obj);
             if (_gameOver)
                 return;
             if(obj is PlayerCar)
@@ -79,13 +80,10 @@ namespace Base.Game.Manager
                     _gameOver = true;
                 }
             }
-            _interactionalObjectInGame.Remove(obj);
         }
 
         private void OnInteractableObjectDestroyed(IInteractableObject obj)
         {
-            if (_gameOver)
-                return;
             _interactableObjectInGame.Remove(obj);
         }
 
@@ -163,15 +161,24 @@ namespace Base.Game.Manager
                 StopCoroutine(_fieldExplosionRoutine);
             for (int i = 0; i < _interactableObjectInGame.Count; i++)
                 _interactableObjectInGame[i].DeActive();
-            _interactableObjectInGame.Clear();
             for (int i = 0; i < _interactionalObjectInGame.Count; i++)
+            {
                 _interactionalObjectInGame[i].DeActive();
-            _interactionalObjectInGame.Clear();
+            }
             foreach (Field field in _defaultExplosiveZones)
                 field.Active();
             _explosiveZones.Clear();
             _explosiveZones.AddRange(_defaultExplosiveZones);
             _enemyCount = 2;
+            _interactionalObjectInGame.Clear();
+            _interactableObjectInGame.Clear();
+
+            foreach (EnemyCar car in FindObjectsOfType<EnemyCar>())
+                car.DeActive();
+            foreach (Carrier car in FindObjectsOfType<Carrier>())
+                car.DeActive();
+            foreach (MagicBox box in FindObjectsOfType<MagicBox>())
+                box.DeActive();
             PlayerSpawn();
             EnemiesSpawn();
             MagicBoxSpawn();
