@@ -190,6 +190,7 @@ namespace Base.Game.Manager
         {
             var wait = new WaitForFixedUpdate();
             float timer = _fieldExplosionTime;
+            Constant.platformRadius = 80f;
             while(_explosiveZones.Count > 0)
             {
                 timer -= Time.fixedDeltaTime;
