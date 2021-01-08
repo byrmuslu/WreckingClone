@@ -53,6 +53,14 @@ namespace Base.Game.Manager
             SignalBus<SignalInteractionalObjectDestroyed, IInteractionalObject>.Instance.Register(OnInteractionalObjectDestroyed);
         }
 
+        private void UnRegistration()
+        {
+            SignalBus<SignalRestartGame>.Instance.UnRegister(OnRestartGame);
+            SignalBus<SignalStartGame>.Instance.UnRegister(OnStartGame);
+            SignalBus<SignalInteractableObjectDestroyed, IInteractableObject>.Instance.UnRegister(OnInteractableObjectDestroyed);
+            SignalBus<SignalInteractionalObjectDestroyed, IInteractionalObject>.Instance.UnRegister(OnInteractionalObjectDestroyed);
+        }
+
         private void OnInteractionalObjectDestroyed(IInteractionalObject obj)
         {
             if (_gameOver)
@@ -79,14 +87,6 @@ namespace Base.Game.Manager
             if (_gameOver)
                 return;
             _interactableObjectInGame.Remove(obj);
-        }
-
-        private void UnRegistration()
-        {
-            SignalBus<SignalRestartGame>.Instance.UnRegister(OnRestartGame);
-            SignalBus<SignalStartGame>.Instance.UnRegister(OnStartGame);
-            SignalBus<SignalInteractableObjectDestroyed, IInteractableObject>.Instance.UnRegister(OnInteractableObjectDestroyed);
-            SignalBus<SignalInteractionalObjectDestroyed, IInteractionalObject>.Instance.UnRegister(OnInteractionalObjectDestroyed);
         }
 
         private void OnRestartGame()
