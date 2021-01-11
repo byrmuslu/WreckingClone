@@ -11,7 +11,8 @@
 
         public void AddForce()
         {
-            _body?.AddForce(Vector3.right * _rotationMultipier, ForceMode.Impulse);
+            //_body?.AddForce(Vector3.right * _rotationMultipier, ForceMode.Impulse);
+            //transform.parent.localPosition = Vector3.MoveTowards(transform.parent.localPosition, _targetPos, Time.deltaTime);
         }
 
         public void Interact(IInteractionalObject obj)

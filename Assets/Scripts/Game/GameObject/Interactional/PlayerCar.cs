@@ -34,7 +34,7 @@
 
         private void Registration()
         {
-            SignalBus<SignalTouch, bool>.Instance.Register(OnTouched);
+            SignalBus<SignalHorizontalMultipier, float>.Instance.Register(OnRotationChanged);
             SignalBus<SignalGameOver, bool>.Instance.Register(OnGameOver);
         }
 
@@ -48,14 +48,17 @@
         private void UnRegistration()
         {
             SignalBus<SignalGameOver, bool>.Instance.UnRegister(OnGameOver);
-            SignalBus<SignalTouch, bool>.Instance.UnRegister(OnTouched);
+            SignalBus<SignalHorizontalMultipier, float>.Instance.UnRegister(OnRotationChanged);
         }
 
-        private void OnTouched(bool touched)
+        private void OnRotationChanged(float h)
         {
-            if (!touched)
-                return;
-            Rotate();
+            if (h == 1)
+                RotateRight();
+            else if (h == -1)
+                RotateLeft();
+            else
+                RotateForward();
         }
 
     }

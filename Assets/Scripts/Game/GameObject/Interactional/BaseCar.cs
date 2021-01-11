@@ -15,14 +15,16 @@ namespace Base.Game.GameObject.Interactional
         public float Speed { get; protected set; }
 
         private ICommand _move;
-        private ICommand _rotate;
+        private ICommand _rotateRight;
+        private ICommand _rotateLeft;
 
         protected virtual void Initialize()
         {
             var moveAction = new MovementAction(this);
             _move = new Command<MovementAction>(moveAction, m => m.MoveForward());
             var rotateAction = new RotateAction(this);
-            _rotate = new Command<RotateAction>(rotateAction, r => r.RotateAxisY());
+            _rotateRight = new Command<RotateAction>(rotateAction, r => r.RotateAxisY());
+            _rotateLeft = new Command<RotateAction>(rotateAction, r => r.RotateAxisYMinus());
         }
 
         protected virtual void Movement()
@@ -30,10 +32,21 @@ namespace Base.Game.GameObject.Interactional
             _move.Execute();
         }
 
-        protected virtual void Rotate()
+        protected virtual void RotateRight()
         {
-            _rotate.Execute();
+            _rotateRight.Execute();
             _connectedBall.AddForce();
+        }
+
+        protected virtual void RotateLeft()
+        {
+            _rotateLeft.Execute();
+            _connectedBall.AddForce();
+        }
+
+        protected virtual void RotateForward()
+        {
+
         }
 
         public virtual void Interact(IInteractableObject obj)

@@ -52,7 +52,7 @@
                 rotateTime -= Time.fixedDeltaTime;
                 if (rotateTime > 0)
                 {
-                    Rotate();
+                    RotateRight();
                 }
                 Movement();
                 yield return wait;

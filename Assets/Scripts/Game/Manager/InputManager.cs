@@ -5,9 +5,12 @@ namespace Base.Game.Manager
 
     public class InputManager : MonoBehaviour
     {
+        [SerializeField] private Joystick _joystick = null;
         void Update()
         {
-            SignalBus<SignalTouch, bool>.Instance.Fire(Input.GetMouseButton(0));
+            if (!_joystick)
+                return;
+            SignalBus<SignalHorizontalMultipier, float>.Instance.Fire(_joystick.Horizontal);
         }
     }
 }
