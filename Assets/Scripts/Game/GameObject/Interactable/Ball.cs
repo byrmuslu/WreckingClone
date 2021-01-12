@@ -9,10 +9,10 @@
         public float ImpactForce { get => _impactForce; }
         public Transform Transform { get => transform; }
 
-        public void AddForce()
+
+        public void AddForce(bool direc)
         {
-            //_body?.AddForce(Vector3.right * _rotationMultipier, ForceMode.Impulse);
-            //transform.parent.localPosition = Vector3.MoveTowards(transform.parent.localPosition, _targetPos, Time.deltaTime);
+            _body.AddForce(transform.right * (direc ? -1 : 1) * _rotationMultipier * Time.deltaTime, ForceMode.Impulse);
         }
 
         public void Interact(IInteractionalObject obj)

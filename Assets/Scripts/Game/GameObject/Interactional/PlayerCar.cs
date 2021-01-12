@@ -57,8 +57,6 @@
                 RotateRight();
             else if (h == -1)
                 RotateLeft();
-            else
-                RotateForward();
         }
 
     }

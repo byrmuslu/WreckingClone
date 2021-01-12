@@ -9,12 +9,12 @@
     public class EnemyCar : BaseCar
     {
         [SerializeField] private float _stateChangeTime = 5f;
-        private Queue<MagicBox> _spawnedBoxes;
+
+        private Coroutine _aiRoutine;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _spawnedBoxes = new Queue<MagicBox>();
         }
 
         public override void DeActive()
@@ -25,15 +25,22 @@
 
         private void OnDisable()
         {
-            StopAllCoroutines();
-            UnRegistration();
+            if(_aiRoutine != null)
+            {
+                StopCoroutine(_aiRoutine);
+                _aiRoutine = null;
+            }
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            StartCoroutine(AIAction());
-            Registration();
+            Invoke(nameof(StartAI), .1f);
+        }
+
+        private void StartAI()
+        {
+            _aiRoutine = StartCoroutine(AIAction());
         }
 
         private IEnumerator AIAction()
@@ -41,6 +48,7 @@
             var wait = new WaitForFixedUpdate();
             float timer = _stateChangeTime -.5f;
             float rotateTime = UnityEngine.Random.Range(.25f, 3f);
+            bool isRight = UnityEngine.Random.Range(0, 2) == 0;
             while (true)
             {
                 timer += Time.fixedDeltaTime;
@@ -48,32 +56,19 @@
                 {
                     rotateTime = UnityEngine.Random.Range(.25f, 3f);
                     timer = 0;
+                    isRight = UnityEngine.Random.Range(0, 2) == 0;
                 }
                 rotateTime -= Time.fixedDeltaTime;
                 if (rotateTime > 0)
                 {
-                    RotateRight();
+                    if (isRight)
+                        RotateRight();
+                    else
+                        RotateLeft();
                 }
                 Movement();
                 yield return wait;
             }
-        }
-
-        private void OnMagicBoxSpawned(MagicBox obj)
-        {
-            if (_spawnedBoxes.Contains(obj))
-                return;
-            _spawnedBoxes.Enqueue(obj);
-        }
-
-        private void Registration()
-        {
-            SignalBus<SignalSpawnMagicBox, MagicBox>.Instance.Register(OnMagicBoxSpawned);
-        }
-
-        private void UnRegistration()
-        {
-            SignalBus<SignalSpawnMagicBox, MagicBox>.Instance.UnRegister(OnMagicBoxSpawned);
         }
 
     }

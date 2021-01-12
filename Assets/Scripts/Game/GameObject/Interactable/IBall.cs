@@ -4,7 +4,7 @@
     {
         UnityEngine.Transform Transform { get; }
         float ImpactForce { get; }
-        void AddForce();
+        void AddForce(bool direc);
         void ChangeState(float timer);
     }
 }

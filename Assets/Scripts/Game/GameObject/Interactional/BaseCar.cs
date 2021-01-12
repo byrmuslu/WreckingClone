@@ -35,18 +35,13 @@ namespace Base.Game.GameObject.Interactional
         protected virtual void RotateRight()
         {
             _rotateRight.Execute();
-            _connectedBall.AddForce();
+            _connectedBall.AddForce(true);
         }
 
         protected virtual void RotateLeft()
         {
             _rotateLeft.Execute();
-            _connectedBall.AddForce();
-        }
-
-        protected virtual void RotateForward()
-        {
-
+            _connectedBall.AddForce(false);
         }
 
         public virtual void Interact(IInteractableObject obj)

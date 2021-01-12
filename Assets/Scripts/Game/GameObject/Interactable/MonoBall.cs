@@ -7,7 +7,6 @@
     using UnityEngine;
     public partial class Ball : MonoBehaviour
     {
-
         [SerializeField] private MeshFilter _meshFilter;
         [Space(10)]
         [SerializeField] private float _changedStateRotationSpeed = 200f;
@@ -23,26 +22,24 @@
         private float _stateTime;
         private Coroutine _actionRoutine;
         private Vector3 _initLocalPos;
-        private Vector3 _targetPos;
-        
+        private Rigidbody _body;
+        private Collider _collider;
 
         private void Awake()
         {
-            _targetPos = transform.parent.localPosition + Vector3.forward * -3f;
+            _collider = GetComponent<Collider>();
+            _body = GetComponent<Rigidbody>();
             _impactForce = _defaultImpactForce;
             _initLocalPos = transform.localPosition;
             _ownCar = GetComponentInParent<BaseCar>();
             _linkages = transform.parent.GetComponentsInChildren<Linkage>().ToList();
             _rotationMultipier = _defaultRotationMultipier;
-            _changedStateRotationSpeed *= Time.fixedDeltaTime;
         }
-
 
         public void Init()
         {
-            _impactForce = _defaultImpactForce;
+            _body.isKinematic = false;
             transform.localPosition = _initLocalPos;
-            _rotationMultipier = _defaultRotationMultipier;
             _actionRoutine = null;
             foreach (Linkage linkage in _linkages)
                 linkage.Init();
@@ -59,22 +56,24 @@
             _stateTime = changedStateTime;
             var wait = new WaitForFixedUpdate();
             float timer = 0f;
-            _rotationMultipier = 0;
-            Vector3 locPos = transform.localPosition;
-            Vector3 locRot = transform.localEulerAngles;
+            Rigidbody connectedBody = GetComponent<Joint>().connectedBody;
             foreach (Linkage linkage in _linkages)
                 linkage.DeActive();
+            transform.localPosition = _initLocalPos;
+            _body.isKinematic = true;
+            _collider.isTrigger = true;
             while (timer < _stateTime)
             {
                 timer += Time.fixedDeltaTime;
-                transform.RotateAround(_ownCar.transform.position, Vector3.up, _changedStateRotationSpeed);
+                transform.RotateAround(_ownCar.transform.position, Vector3.up, _changedStateRotationSpeed * Time.fixedDeltaTime);
                 yield return wait;
             }
-            transform.localPosition = locPos;
-            transform.localRotation = Quaternion.Euler(locRot);
+            _collider.isTrigger = false;
+            _body.isKinematic = false;
+            transform.localPosition = _initLocalPos;
             foreach (Linkage linkage in _linkages)
                 linkage.Active();
-            _rotationMultipier = _defaultRotationMultipier;
+            GetComponent<Joint>().connectedBody = connectedBody;
             _actionRoutine = null;
             _impactForce = _defaultImpactForce;
         }
