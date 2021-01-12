@@ -11,8 +11,8 @@
         [SerializeField] private float _defaultSpeed = 1f;
         [SerializeField] private float _defaultRotateSpeed = 1f;
         [Space(20)]
-        [SerializeField] private MeshFilter _meshFilter;
-        [SerializeField] protected Ball _connectedBall;
+        [SerializeField] private MeshFilter _meshFilter = null;
+        [SerializeField] protected Ball _connectedBall = null;
 
 
         private void Awake()
