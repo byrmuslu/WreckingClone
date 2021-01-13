@@ -24,9 +24,11 @@
         private Vector3 _initLocalPos;
         private Rigidbody _body;
         private Collider _collider;
+        private Joint _joint;
 
         private void Awake()
         {
+            _joint = GetComponent<Joint>();
             _collider = GetComponent<Collider>();
             _body = GetComponent<Rigidbody>();
             _impactForce = _defaultImpactForce;
@@ -38,6 +40,8 @@
 
         public void Init()
         {
+            transform.parent = _ownCar.transform;
+            _collider.isTrigger = false;
             _body.isKinematic = false;
             transform.localPosition = _initLocalPos;
             _actionRoutine = null;
@@ -56,24 +60,27 @@
             _stateTime = changedStateTime;
             var wait = new WaitForFixedUpdate();
             float timer = 0f;
-            Rigidbody connectedBody = GetComponent<Joint>().connectedBody;
+            Rigidbody connectedBody = _joint.connectedBody;
             foreach (Linkage linkage in _linkages)
                 linkage.DeActive();
             transform.localPosition = _initLocalPos;
             _body.isKinematic = true;
             _collider.isTrigger = true;
+            transform.parent = null;
             while (timer < _stateTime)
             {
                 timer += Time.fixedDeltaTime;
                 transform.RotateAround(_ownCar.transform.position, Vector3.up, _changedStateRotationSpeed * Time.fixedDeltaTime);
+                transform.position = new Vector3(transform.position.x, _ownCar.transform.position.y, transform.position.z);
                 yield return wait;
             }
+            transform.parent = _ownCar.transform;
             _collider.isTrigger = false;
             _body.isKinematic = false;
-            transform.localPosition = _initLocalPos;
             foreach (Linkage linkage in _linkages)
                 linkage.Active();
-            GetComponent<Joint>().connectedBody = connectedBody;
+            transform.localPosition = _initLocalPos;
+            _joint.connectedBody = connectedBody;
             _actionRoutine = null;
             _impactForce = _defaultImpactForce;
         }

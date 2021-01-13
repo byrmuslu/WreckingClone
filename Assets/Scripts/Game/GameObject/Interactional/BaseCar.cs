@@ -34,12 +34,14 @@ namespace Base.Game.GameObject.Interactional
 
         protected virtual void RotateRight()
         {
+            Rigidbody.angularVelocity = Vector3.zero;
             _rotateRight.Execute();
             _connectedBall.AddForce(true);
         }
 
         protected virtual void RotateLeft()
         {
+            Rigidbody.angularVelocity = Vector3.zero;
             _rotateLeft.Execute();
             _connectedBall.AddForce(false);
         }
@@ -48,7 +50,8 @@ namespace Base.Game.GameObject.Interactional
         {
             if(obj is IBall ball)
             {
-                Rigidbody.AddExplosionForce(ball.ImpactForce, ball.Transform.position, 5f,3.0f);
+                Rigidbody.AddExplosionForce(ball.ImpactForce, ball.Transform.position, 30f,3.0f);
+                Handheld.Vibrate();
             }
             if (obj is MagicBox box)
                 _connectedBall.ChangeState(box.Timer);

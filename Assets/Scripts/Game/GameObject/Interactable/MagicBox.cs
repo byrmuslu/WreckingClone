@@ -40,7 +40,7 @@
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Carrier>())
+            if (other.GetComponent<Carrier>() != null || other.GetComponent<IPortableObject>() != null)
                 return;
             _onGround = true;
             _connectedCarrier?.DeActive();

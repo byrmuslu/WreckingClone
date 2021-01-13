@@ -37,6 +37,7 @@ namespace Base.Game.Manager
 
         private void Awake()
         {
+            Application.targetFrameRate = 60;
             Registration();
         }
 
